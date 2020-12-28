@@ -1,164 +1,258 @@
-# Cool Store: Cloud-Native Microservices Application on Service Mesh
+# Cool Store - Kubernetes-based polyglot microservices application with Istio service mesh
 
-<p align="left">
-  <a href="https://github.com/vietnam-devs/coolstore-microservices/blob/master/LICENSE"><img src="https://img.shields.io/badge/price-FREE-0098f7.svg" alt="Price"></a>
-  <a href="https://travis-ci.org/vietnam-devs/coolstore-microservices"><img src="https://travis-ci.org/vietnam-devs/coolstore-microservices.svg?label=travis-ci&branch=master&style=flat-square" alt="Build Status" data-canonical-src="https://travis-ci.org/vietnam-devs/coolstore-microservices.svg?label=travis-ci&branch=master" style="max-width:100%;"></a>
-</p>
+![Travis (.org)](https://travis-ci.org/vietnam-devs/coolstore-microservices.svg?branch=master)
+[![Build Status](https://dev.azure.com/vietnam-devs/coolstore-microservices/_apis/build/status/vietnam-devs.coolstore-microservices)](https://dev.azure.com/vietnam-devs/coolstore-microservices/_build/latest?definitionId=1)
+[![Price](https://img.shields.io/badge/price-FREE-0098f7.svg)](https://github.com/vietnam-devs/coolstore-microservices/blob/master/LICENSE)
+[![OpenTracing Badge](https://img.shields.io/badge/OpenTracing-enabled-blue.svg)](http://opentracing.io)
 
-> This project is inspired from [CoolStore project](https://github.com/jbossdemocentral/coolstore-microservice) by [JBoss Demo Central](https://github.com/jbossdemocentral) & [Red Hat Demo Central](https://gitlab.com/redhatdemocentral)
+CoolStore is a containerised polyglot microservices application consisting of services based on .NET Core, NodeJS and more running on Service Mesh. It demonstrates how to wire up small microservices into a larger application using microservice architectural principals. Read https://vietnam-devs.github.io for more information about how can we design and implement it.
 
-CoolStore is a containerised polyglot microservices application consisting of services based on .NET Core, NodeJS and more running on Service Mesh.
+The business domain for internal µservice is inspired from [CoolStore project](https://github.com/jbossdemocentral/coolstore-microservice) by [JBoss Demo Central](https://github.com/jbossdemocentral) and [Red Hat Demo Central](https://gitlab.com/redhatdemocentral). The readme file is inspired from [GoogleCloudPlatform Demo](https://github.com/GoogleCloudPlatform/microservices-demo).
 
-It demonstrates how to wire up small microservices into a larger application using microservice architectural principals.
+## Public presentation
 
-### Screenshots
+- [From Microservices to Service Mesh - DevCafe event in July 2018](https://www.slideshare.net/ThangChung/from-microservices-to-service-mesh-devcafe-event-july-2018)
+- [Service Mesh for Microservices- Vietnam Mobile Day event in June 2018](https://www.slideshare.net/ThangChung/service-mesh-for-microservices-vietnam-mobile-day-june-2017)
+- [Avoid SPOF in Cloud-native Apps - Vietnam Web Summit event in December 2018](https://www.slideshare.net/ThangChung/avoid-single-point-of-failure-in-cloud-native-application)
 
-| Home Page | Cart Page |
-|-----------|--------------|
-| [![home-page](assets/images/ui-screen-1.PNG?raw=true)](assets/images/ui-screen-1.PNG?raw=true) | [![cart-page](assets/images/ui-screen-2.PNG?raw=true)](assets/images/ui-screen-2.PNG?raw=true) |
+Check out my [blog](https://medium.com/@thangchung), my [chat](https://spectrum.chat/net-core) or say hi on [Twitter](https://twitter.com/thangchung)!
 
-### Presentation
-Our team uses this application to demonstrate Kubernetes, AKS, Istio and similar cloud-native technologies in events as following
+[Become a sponsor on Patreon](https://www.patreon.com/thangchung)
 
-- [From Microservices to Service Mesh - DevCafe Event - July 2018](https://www.slideshare.net/ThangChung/from-microservices-to-service-mesh-devcafe-event-july-2018)
-- [Service Mesh for Microservices- Vietnam Mobile Day Event - June 2018](https://www.slideshare.net/ThangChung/service-mesh-for-microservices-vietnam-mobile-day-june-2017)
+## Screenshots
+
+<details>
+  <summary>Home page</summary>
+
+![home-page](assets/images/ui-screen-1.PNG?raw=true)
+
+</details>
+
+<details>
+  <summary>Cart page</summary>
+
+![cart-page](assets/images/ui-screen-2.PNG?raw=true)
+
+</details>
 
 # Table of contents
 
-* [Prerequisites](https://github.com/vietnam-devs/coolstore-microservices#prerequisites)
-* [Installation](https://github.com/vietnam-devs/coolstore-microservices#installation)
-* [µService Development](https://github.com/vietnam-devs/coolstore-microservices#µmicroservice-development)
-* [Open API](https://github.com/vietnam-devs/coolstore-microservices#open-api)
-* [CI/CD](https://github.com/vietnam-devs/coolstore-microservices#ci-cd)
-* [Service Mesh](https://github.com/vietnam-devs/coolstore-microservices#service-mesh)
-* [Contributing](https://github.com/vietnam-devs/coolstore-microservices#contributing)
-* [Contributors](https://github.com/vietnam-devs/coolstore-microservices#contributors)
-* [Licence](https://github.com/vietnam-devs/coolstore-microservices#licence)
+- [OS, SDK, library, tooling and prerequisites](https://github.com/vietnam-devs/coolstore-microservices#os-sdk-library-tooling-and-prerequisites)
+- [High level software architecture](https://github.com/vietnam-devs/coolstore-microservices#high-level-software-architecture)
+- [Installation](https://github.com/vietnam-devs/coolstore-microservices#installation)
+- [µService development](https://github.com/vietnam-devs/coolstore-microservices#µmicroservice-development)
+- [Open API](https://github.com/vietnam-devs/coolstore-microservices#open-api)
+- [CI/CD](https://github.com/vietnam-devs/coolstore-microservices#ci-cd)
+- [Service mesh](https://github.com/vietnam-devs/coolstore-microservices#service-mesh)
+- [Contributing](https://github.com/vietnam-devs/coolstore-microservices#contributing)
+- [Contributors](https://github.com/vietnam-devs/coolstore-microservices#contributors)
+- [Licence](https://github.com/vietnam-devs/coolstore-microservices#licence)
 
-## Prerequisites
+## OS, SDK, library, tooling and prerequisites
 
-- Windows 10
-- Windows Subsystem Linux (WSL - Ubuntu OS)
-- Docker for Desktop (Kubernetes enabled)
-- kubectl
-- helm
-- istioctl
+- **`Windows 10`** - the OS for developing and building this demo application .
+- **[`Windows subsystem Linux - Ubuntu OS`](https://docs.microsoft.com/en-us/windows/wsl/install-win10)** - the subsystem that helps to run easily the bash shell on Windows OS
+- **[`Docker for desktop (Kubernetes enabled)`](https://www.docker.com/products/docker-desktop)** - the easiest tool to run Docker, Docker Swarm and Kubernetes on Mac and Windows
+- **[`Kubernetes`](https://kubernetes.io) / [`AKS`](https://docs.microsoft.com/en-us/azure/aks)** - the app is designed to run on Kubernetes (both locally on "Docker for Desktop", as well as on the cloud with AKS)
+- **[`istio`](https://istio.io)** - application works on Istio service mesh
+- **[`helm`](https://helm.sh)** - the best package manager to find, share, and use software built for Kubernetes
+- **[`envoy-proxy`](https://www.envoyproxy.io/)** - open source edge and service proxy, designed for cloud-native applications
+- **[`.NET Core SDK 2.x`](https://dotnet.microsoft.com/download)** - .NET Framework and .NET Core, including ASP.NET and ASP.NET Core
+- **[`nodejs 10.x`](https://nodejs.org/en/download)** - JavaScript runtime built on Chrome's V8 JavaScript engine
+- **[`typescript`](https://www.typescriptlang.org)** - a typed superset of JavaScript that compiles to plain JavaScript
+- **[`identityserver`](https://identityserver.io)** - the Identity and Access Control solution for .NET Core
+- **[`gRPC`](https://grpc.io)** - a high-performance, open-source universal RPC framework
+- **[`create-react-app`](https://facebook.github.io/create-react-app)** - a modern web app by running one command
+- **[`vue-cli`](https://cli.vuejs.org/)** - standard tooling for Vue.js development
+- **[`apollo-client`](https://www.apollographql.com/docs/react/)** - the best way to use GraphQL to build client applications
+- **[`tanka-graphql`](https://pekkah.github.io/tanka-graphql)** - GraphQL execution library with SignalR based server and ApolloLink implementation
+- **[`netcorekit`](https://github.com/cloudnative-netcore/netcore-kit)** - a crafted microservices toolkit for building cloud-native apps on the .NET platform
 
-## µServices
-
-There are several individual µservices and infrastructure components that make up this app:
-
-| No. | Service | Description | Language | Database | Endpoints |
-|-----|---------|-------------|----------|----------|-----------|
-| 1 | Catalog | Serves products and prices for retail products | Node.js | Mongo | [`http://localhost:5002`](http://localhost:5002) or [`http://api.coolstore.local/catalog`](http://api.coolstore.local/catalog/swagger)
-| 2 | Cart | Manages shopping cart for each customer | .NET Core | MySQL | [`http://localhost:5003`](http://localhost:5003) or [`http://api.coolstore.local/cart`](http://api.coolstore.local/cart/swagger)
-| 3 | Inventory | Serves inventory and availability data for retail products | .NET Core | MySQL | [`http://localhost:5004`](http://localhost:5004) or [`http://api.coolstore.local/inventory`](http://api.coolstore.local/inventory/swagger)
-| 4 | Pricing | Handles a business rules application for product pricing | .NET Core | MySQL | [`http://localhost:5005`](http://localhost:5005) or [`http://api.coolstore.local/pricing`](http://api.coolstore.local/pricing/swagger)
-| 5 | Review | Runs for writing and displaying reviews for products | .NET Core | MySQL | [`http://localhost:5006`](http://localhost:5006) or [`http://api.coolstore.local/review`](http://api.coolstore.local/review/swagger)
-| 6 | Rating | Runs for rating products | Node.js | Mongo | [`http://localhost:5007`](http://localhost:5007) or [`http://api.coolstore.local/rating`](http://api.coolstore.local/rating/swagger)
-| 7 | IdP | Uses [IdentityServer4](https://github.com/IdentityServer/IdentityServer4) to authentication with OAuth 2.0 and OpenID Connect for the whole stack | .NET Core | In Memory | [`http://localhost:5001`](http://localhost:5001) or [`http://id.coolstore.local`](http://id.coolstore.local)
-| 8 | Web UI (PWA) | Frontend based on [vuejs](https://vuejs.org/) and [Node.js](https://nodejs.org) | Vuejs + Node.js | N/A | [`http://localhost:8080`](http://localhost:8080) or [`http://coolstore.local`](http://coolstore.local)
-
-### Architecture of µServices
+## High level software architecture
 
 ![Architecture Screenshot](assets/images/arch-diagram.png?raw=true 'Architecture Diagram')
 
-## Features
-- **[Kubernetes](https://kubernetes.io)/[AKS](https://docs.microsoft.com/en-us/azure/aks):**
-  The app is designed to run on Kubernetes (both locally on "Docker for
-  Desktop", as well as on the cloud with AKS).
-- **[Istio](https://istio.io):** Application works on Istio service mesh.
-- **[NetCoreKit](https://github.com/cloudnative-netcore/netcore-kit):** Set of Cloud Native tools and utilities for .NET Core.
+There are several individual µservices and infrastructure components that make up this app:
+
+<table>
+  <thead>
+    <th>No.</th>
+    <th>Service</th>
+    <th>Description</th>
+    <th>Source</th>
+    <th>Endpoints</th>
+  </thead>
+  <tbody>
+    <tr>
+      <td align="center">1.</td>
+      <td>
+        IdP (.NET Core + In-memory database)<br/>
+        <a href="https://dev.azure.com/vietnam-devs/coolstore-microservices/_build/latest?definitionId=4&branchName=master">
+          <img src="https://dev.azure.com/vietnam-devs/coolstore-microservices/_apis/build/status/identity?branchName=master" />
+        </a>
+      </td>
+      <td>Uses <a href="https://github.com/IdentityServer/IdentityServer4">IdentityServer4</a> to authentication with OAuth 2.0 and OpenID Connect for the whole stack</td>
+      <td>
+        <a href="https://github.com/vietnam-devs/coolstore-microservices/tree/master/src/services/idp">code</a>
+      </td>
+      <td>
+        <a href="http://localhost:5001">dev</a> and <a href="http://id.coolstore.local">staging</a>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">2.</td>
+      <td>
+        GraphQL server (.NET Core)<br/>
+        <a href="https://dev.azure.com/vietnam-devs/coolstore-microservices/_build/latest?definitionId=12&branchName=master">
+          <img src="https://dev.azure.com/vietnam-devs/coolstore-microservices/_apis/build/status/graphql?branchName=master" />
+        </a>
+      </td>
+      <td>The GraphQL server for backoffice application</td>
+      <td>
+        <a href="https://github.com/vietnam-devs/coolstore-microservices/tree/master/src/services/graphql">code</a>
+      </td>
+      <td>
+        <a href="http://localhost:5011">dev</a> and <a href="http://api.coolstore.local/graphql/playground">staging</a>
+      </td>
+     </tr>
+     <tr>
+      <td align="center">3.</td>
+      <td>
+        OpenApi (.NET Core + envoy-proxy)<br/>
+        <a href="https://dev.azure.com/vietnam-devs/coolstore-microservices/_build/latest?definitionId=11&branchName=master">
+          <img src="https://dev.azure.com/vietnam-devs/coolstore-microservices/_apis/build/status/openapi?branchName=master" />
+        </a>
+      </td>
+      <td>The OpenAPI which generated from gRPC contract files, hosted in OpenAPI format, and used envoy-proxy to proxy it</td>
+      <td>
+        <a href="https://github.com/vietnam-devs/coolstore-microservices/tree/master/src/services/openapi">code</a>
+      </td>
+      <td>
+        <a href="http://localhost:5010">dev</a> and <a href="http://api.coolstore.local/openapi/swagger">staging</a>
+      </td>
+     </tr>
+     <tr>
+      <td align="center">4.</td>
+      <td>
+        Web (PWA - Vuejs + Node.js)<br/>
+        <a href="https://dev.azure.com/vietnam-devs/coolstore-microservices/_build/latest?definitionId=8&branchName=master">
+          <img src="https://dev.azure.com/vietnam-devs/coolstore-microservices/_apis/build/status/web?branchName=master" />
+        </a>
+      </td>
+      <td>Frontend based on <a href="https://vuejs.org">vuejs</a> and <a href="https://nodejs.org">Node.js</a></td>
+      <td>
+        <a href="https://github.com/vietnam-devs/coolstore-microservices/tree/master/src/web">code</a>
+      </td>
+      <td>
+        <a href="http://localhost:8080">dev</a> and <a href="http://web.coolstore.local">staging</a>
+      </td>
+     </tr>
+     <tr>
+      <td align="center">5.</td>
+      <td>
+        Backoffice (React + TypeScript + Apollo-client)<br/>
+        <a href="https://dev.azure.com/vietnam-devs/coolstore-microservices/_build/latest?definitionId=10&branchName=master">
+          <img src="https://dev.azure.com/vietnam-devs/coolstore-microservices/_apis/build/status/backoffice?branchName=master" />
+      </td>
+      <td>The back office application for management business entities in the system</td>
+      <td>
+        <a href="https://github.com/vietnam-devs/coolstore-microservices/tree/master/src/backoffice">code</a>
+      </td>
+      <td>
+        <a href="http://localhost:8081">dev</a> and <a href="http://backoffice.coolstore.local">staging</a>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">6.</td>
+      <td>
+        Catalog (Node.js + TypeScript + Mongo)<br/>
+        <a href="https://dev.azure.com/vietnam-devs/coolstore-microservices/_build/latest?definitionId=3&branchName=master">
+          <img src="https://dev.azure.com/vietnam-devs/coolstore-microservices/_apis/build/status/catalog?branchName=master" />
+        </a>
+      </td>
+      <td>Serves products and prices for retail products</td>
+      <td>
+        <a href="https://github.com/vietnam-devs/coolstore-microservices/tree/master/src/services/catalog">code</a>
+      </td>
+      <td>
+        <a href="http://localhost:5002">dev</a>
+      </td>
+     </tr>
+     <tr>
+      <td align="center">7.</td>
+      <td>
+        Cart (.NET Core + MySQL)<br/>
+        <a href="https://dev.azure.com/vietnam-devs/coolstore-microservices/_build/latest?definitionId=2&branchName=master">
+          <img src="https://dev.azure.com/vietnam-devs/coolstore-microservices/_apis/build/status/cart?branchName=master" />
+        </a>
+      </td>
+      <td>Manages shopping cart for each customer</td>
+      <td>
+        <a href="https://github.com/vietnam-devs/coolstore-microservices/tree/master/src/services/cart">code</a>
+      </td>
+      <td>
+        <a href="http://localhost:5003">dev</a>
+      </td>
+     </tr>
+     <tr>
+      <td align="center">8.</td>
+      <td>
+        Inventory (.NET Core + MySQL)<br/>
+        <a href="https://dev.azure.com/vietnam-devs/coolstore-microservices/_build/latest?definitionId=5&branchName=master">
+          <img src="https://dev.azure.com/vietnam-devs/coolstore-microservices/_apis/build/status/inventory?branchName=master" />
+        </a>
+      </td>
+      <td>Serves inventory and availability data for retail products</td>
+      <td>
+        <a href="https://github.com/vietnam-devs/coolstore-microservices/tree/master/src/services/inventory">code</a>
+      </td>
+      <td>
+        <a href="http://localhost:5004">dev</a>
+      </td>
+     </tr>
+     <tr>
+      <td align="center">9.</td>
+      <td>
+        Rating (Node.js + TypeScript + Mongo)<br/>
+        <a href="https://dev.azure.com/vietnam-devs/coolstore-microservices/_build/latest?definitionId=6&branchName=master">
+          <img src="https://dev.azure.com/vietnam-devs/coolstore-microservices/_apis/build/status/rating?branchName=master" />
+        </a>
+      </td>
+      <td>Runs for rating products</td>
+      <td>
+        <a href="https://github.com/vietnam-devs/coolstore-microservices/tree/master/src/services/rating">code</a>
+      </td>
+      <td>
+        <a href="http://localhost:5007">dev</a>
+      </td>
+     </tr>
+  </tbody>
+</table>
 
 ## Installation
 
-### Option 1: Up and Running locally with "Docker for Desktop", development only
+### Development environment
 
-1. Make sure we have **`Docker for Desktop`** running with **`Kubernetes`** option enabled. We need to install **`kubectl`**, **`helm`** and **`istioctl`** on the build machine as well.
+#### Up and running manually with `Docker for desktop`
 
-2. From current console, type `bash` to enter `Linux Subsystem (Ubuntu)`
+See https://vietnam-devs.github.io/docs/development/up-running-d4d-aks/#docker-for-desktop
 
-3. Then `cd` into your root of project
+#### Up and running with `docker compose`
 
-```
-> ./deploys/cs-build.sh
-```
-
-It should run and package all docker images.
-
-4. Download and install [istio-1.0.0](https://github.com/istio/istio/releases/tag/1.0.0) on the box, and unzip it into somewhere, then initialize it with following commands
-
-```
-> cd <istio-1.0.0 path>
-> kubectl create -f install/kubernetes/helm/helm-service-account.yaml
-> helm init --service-account tiller --upgrade
+```bash
+$ docker-compose build
+$ docker-compose up
 ```
 
-5. Get `istio-ingressgateway` IP address
+### Staging and Production environments
 
-```
-> kubectl get services istio-ingressgateway -n istio-system -o=jsonpath={.spec.clusterIP}
-> 10.96.34.68 <== example IP
-```
+#### Up and Running on `Azure Kubernetes Service` (`AKS`)
 
-6. Create `values.dev.local.yaml` file in `deploys/charts/coolstore`, and put content like
+See https://vietnam-devs.github.io/docs/development/up-running-d4d-aks/#azure-kubernetes-service-aks
 
-```
-gateway:
-  ip: 10.96.34.68
-```
+## µService development
 
-7. Apply `istioctl` command to `coolstore` chart
-
-```
-> helm template deploys/charts/coolstore -f deploys/charts/coolstore/values.dev.yaml -f deploys/charts/coolstore/values.dev.local.yaml > deploys/k8s/dev-all-in-one.yaml
-> istioctl kube-inject -f deploys/k8s/dev-all-in-one.yaml | kubectl apply -f -
-```
-
-8. Add hosts file with following content
-
-```
-127.0.0.1   api.coolstore.local
-127.0.0.1   id.coolstore.local
-127.0.0.1   coolstore.local
-```
-
-Waiting for the container provision completed
-
-```
-> curl -I http://coolstore.local # website
-> curl -I http://api.coolstore.local # api gateway
-> curl -I http://id.coolstore.local # identity provider
-```
-
-9. Clean up `coolstore` chart as
-
-```
-> kubectl delete -f deployment/istio/dev-all-in-one.yaml
-> helm delete istio --purge
-```
-
-**Notes**:
-
-1. Global path
-> Set `PATH` for `docker`, `kubectl`, `helm`, and `istioctl`.
-
-2. Run with Nginx (not recommendation)
-> If you want to run just only `Kubernetes` + `nginx-ingress` go to `deploys/charts/coolstore/values.yaml`, and modify as following
->```
-> nginx:
->    enabled: true
->```
-> Then run the `helm` command as
-> ```
-> helm install --name cs-nginx stable/nginx-ingress
-> ```
-
-### Option 2: Up and Running on Azure Kubernetes Service (AKS)
-
-[5 steps to bring CoolStore’s Service Mesh to Azure Kubernetes Service](https://medium.com/@thangchung/5-steps-to-bring-coolstores-service-mesh-to-azure-kubernetes-service-aks-9cd1a5aa008a)
-
-## µService Development
+Guidance for developing µService can be found at [Clean Domain-Driven Design in 10 minutes](https://medium.com/@thangchung/clean-domain-driven-design-in-10-minutes-6037a59c8b7b)
 
 ![µService Screenshot](assets/images/miniservice-development.PNG?raw=true 'Microservice')
 
@@ -170,20 +264,11 @@ Waiting for the container provision completed
 
 ![Lift and Shift](assets/images/lift-and-shift.PNG?raw=true 'liftandshift')
 
-## Service Mesh
-[Istio](https://istio.io) provide a wealth of benefits for the organizations that use them. There’s no denying, however, that adopting the cloud can put strains on DevOps teams. Developers must use microservices to architect for portability, meanwhile operators are managing extremely large hybrid and multi-cloud deployments. Istio lets you connect, secure, control, and observe services.
+## Service mesh
 
-At a high level, Istio helps reduce the complexity of these deployments, and eases the strain on your development teams. It is a completely open source service mesh that layers transparently onto existing distributed applications. It is also a platform, including APIs that let it integrate into any logging platform, or telemetry or policy system. Istio’s diverse feature set lets you successfully, and efficiently, run a distributed microservice architecture, and provides a uniform way to secure, connect, and monitor microservices.
+[`istio`](https://istio.io) provide a wealth of benefits for the organizations that use them. There’s no denying, however, that adopting the cloud can put strains on DevOps teams. Developers must use microservices to architect for portability, meanwhile operators are managing extremely large hybrid and multi-cloud deployments. Istio lets you connect, secure, control, and observe services.
 
-### Traffic Shifting
-
-TODO
-
-### Canary Deployment
-
-TODO
-
-### Distributed Tracing
+### Distributed tracing
 
 ![DAG chart](assets/images/jaeger-dag-1.PNG?raw=true 'DAG')
 
@@ -193,10 +278,6 @@ TODO
 
 ![Metrics chart](assets/images/grafana-ui-1.PNG?raw=true 'Metrics')
 
-### Timeouts
-
-TODO
-
 ## Contributing
 
 1. Fork it!
@@ -205,11 +286,65 @@ TODO
 4. Push to the branch: `git push origin my-new-feature`
 5. Submit a pull request :p
 
-## Contributors
+## Contributors ✨
 
-| [Thang Chung](https://github.com/thangchung)                                                         | [Thinh Nguyen](https://github.com/thinhnotes)                                                          |
-| ---------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| <img src="https://avatars3.githubusercontent.com/u/422341?s=460&v=4"  alt="thangchung" width="150"/> | <img src="https://avatars2.githubusercontent.com/u/4660531?s=460&v=4" alt="thinhnguyen" width="150" /> |
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key))
+
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top">
+        <img width="150" height="150" src="https://github.com/thangchung.png?s=150">
+        <br>
+        <a href="https://github.com/thangchung">Thang Chung</a>
+        <p>
+          <a href="https://github.com/vietnam-devs/coolstore-microservices/commits?author=thangchung" title="Developer">💻</a>
+          <a href="#question" title="Answering Questions">💬</a>
+          <a href="#docs" title="Documentation">📖</a>
+          <a href="#review" title="Reviewed Pull Requests">👀</a>
+          <a href="#infra" title="Infrastructure">🚇</a>
+          <a href="#maintance" title="Maintenance">🚧</a>
+        </p>
+      </td>
+      <td align="center" valign="top">
+        <img width="150" height="150" src="https://github.com/tungphuong.png?s=150">
+        <br>
+        <a href="https://github.com/tungphuong">Phuong Le</a>
+        <p>
+          <a href="https://github.com/vietnam-devs/coolstore-microservices/commits?author=tungphuong" title="Developer">💻</a>
+          <a href="#package" title="Packaging">📦</a>
+          <a href="#infra" title="Infrastructure">🚇</a>
+        </p>
+      </td>
+      <td align="center" valign="top">
+        <img width="150" height="150" src="https://github.com/trumhemcut.png?s=150">
+        <br>
+        <a href="https://github.com/trumhemcut">Phi Huynh</a>
+        <p>
+          <a href="#idea" title="Ideas & Planning">🤔</a>
+          <a href="https://github.com/vietnam-devs/coolstore-microservices/commits?author=trumhemcut" title="Infrastructure">🚇</a>
+        </p>
+      </td>
+      <td align="center" valign="top">
+        <img width="150" height="150" src="https://github.com/thinhnotes.png?s=150">
+        <br>
+        <a href="https://github.com/thinhnotes">Thinh Nguyen</a>
+        <p>
+          <a href="https://github.com/vietnam-devs/coolstore-microservices/commits?author=thinhnotes" title="Developer">💻</a>
+          <a href="#maintance" title="Maintenance">🚧</a>
+        </p>
+      </td>
+      <td align="center" valign="top">
+        <img width="150" height="150" src="https://github.com/stuartleeks.png?s=150">
+        <br>
+        <a href="https://github.com/stuartleeks">Stuart Leeks</a>
+        <p>
+          <a href="#docs" title="Documentation">📖</a>
+        </p>
+      </td>
+     </tr>
+  </tbody>
+</table>
 
 ## Licence
 

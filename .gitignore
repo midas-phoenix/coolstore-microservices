@@ -222,7 +222,7 @@ ClientBin/
 *.publishsettings
 orleans.codegen.cs
 
-# Including strong name files can present a security risk 
+# Including strong name files can present a security risk
 # (https://github.com/github/gitignore/pull/2483#issue-259490424)
 #*.snk
 
@@ -318,7 +318,7 @@ __pycache__/
 # OpenCover UI analysis results
 OpenCover/
 
-# Azure Stream Analytics local run output 
+# Azure Stream Analytics local run output
 ASALocalRun/
 
 # MSBuild Binary and Structured Log
@@ -327,21 +327,36 @@ ASALocalRun/
 # NVidia Nsight GPU debugger configuration file
 *.nvuser
 
-# MFractors (Xamarin productivity tool) working folder 
+# MFractors (Xamarin productivity tool) working folder
 .mfractor/
 
 # lock files
 yarn.lock
 package-lock.json
-build
+#build
 
 # log files
 **/*log.txt
 
 # ignore all *.dev.yaml files
 # **/*/*.dev.yaml
+**/*/.vagrant/
+**/*/*.retry
 **/*/*.local.yaml
-deploys/k8s/**/*.yaml
+deploys/out/**/*.yaml
 **/*/key*.*
+
+# web host
 src/web/shrinkwrap.yaml
 **/dist/
+
+**/*/*.env
+
+# ignore package of grpc-swagger-gen
+./src/github.com/
+./src/google.golang.org/
+./src/gopkg.in/
+
+# git submodules
+src/netcorekit/
+.gitmodules

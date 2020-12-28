@@ -6,6 +6,8 @@ dotnet: 2.1.302
 env:
   global:
     - NODE_VERSION="10.6.0"
+git:
+  submodules: true
 branches:
   only:
     - master

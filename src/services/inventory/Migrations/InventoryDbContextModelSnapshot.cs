@@ -3,7 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using VND.CoolStore.Services.Inventory.Infrastructure.Db;
+using VND.CoolStore.Services.Inventory.v1.Db;
 
 namespace VND.CoolStore.Services.Inventory.Migrations
 {
@@ -14,7 +14,8 @@ namespace VND.CoolStore.Services.Inventory.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.1-rtm-30846");
+                .HasAnnotation("ProductVersion", "2.2.3-servicing-35854")
+                .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("VND.CoolStore.Services.Inventory.Domain.Inventory", b =>
                 {
@@ -31,14 +32,33 @@ namespace VND.CoolStore.Services.Inventory.Migrations
 
                     b.Property<DateTime>("Updated");
 
+                    b.Property<int>("Version");
+
                     b.HasKey("Id");
 
                     b.ToTable("Inventories");
 
                     b.HasData(
-                        new { Id = new Guid("25e6ba6e-fddb-401d-99b2-33ddc9f29322"), Created = new DateTime(2018, 8, 21, 9, 37, 17, 918, DateTimeKind.Utc), Link = "http://nashtechglobal.com", Location = "London, UK", Quantity = 100, Updated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                        new { Id = new Guid("cab3818f-e459-412f-972f-d4b2d36aa735"), Created = new DateTime(2018, 8, 21, 9, 37, 17, 920, DateTimeKind.Utc), Link = "http://nashtechvietnam.com", Location = "Ho Chi Minh City, Vietnam", Quantity = 1000, Updated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) }
-                    );
+                        new
+                        {
+                            Id = new Guid("25e6ba6e-fddb-401d-99b2-33ddc9f29322"),
+                            Created = new DateTime(2019, 4, 7, 7, 47, 46, 581, DateTimeKind.Utc).AddTicks(9895),
+                            Link = "http://nashtechglobal.com",
+                            Location = "London, UK",
+                            Quantity = 100,
+                            Updated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Version = 0
+                        },
+                        new
+                        {
+                            Id = new Guid("cab3818f-e459-412f-972f-d4b2d36aa735"),
+                            Created = new DateTime(2019, 4, 7, 7, 47, 46, 582, DateTimeKind.Utc).AddTicks(1916),
+                            Link = "http://nashtechvietnam.com",
+                            Location = "Ho Chi Minh City, Vietnam",
+                            Quantity = 1000,
+                            Updated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Version = 0
+                        });
                 });
 #pragma warning restore 612, 618
         }

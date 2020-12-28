@@ -1,25 +1,46 @@
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using NetCoreKit.Infrastructure.EfCore.Extensions;
-using VND.CoolStore.Services.Inventory.Infrastructure.Db;
+using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Logging;
+using NetCoreKit.Infrastructure;
+using NetCoreKit.Infrastructure.EfCore;
+using NetCoreKit.Infrastructure.EfCore.Db;
+using NetCoreKit.Infrastructure.EfCore.MySql;
+using NetCoreKit.Infrastructure.GrpcHost;
+using VND.CoolStore.Services.Inventory.v1.Db;
 
 namespace VND.CoolStore.Services.Inventory
 {
-  public class Program
-  {
-    public static void Main(string[] args)
+    public class Program
     {
-      var webHost = CreateWebHostBuilder(args).Build();
-      var env = webHost.Services.GetService<IHostingEnvironment>();
-      if (env.IsDevelopment())
-        webHost = webHost.RegisterDbContext<InventoryDbContext>();
-      webHost.Run();
-    }
+        public static async Task Main(string[] args)
+        {
+            var host = new HostBuilder()
+                .ConfigureDefaultSettings(
+                    args,
+                    services => {
+                        services.AddDbContext<InventoryDbContext>((sp, o) =>
+                        {
+                            var config = sp.GetService<IConfiguration>();
+                            var extendOptionsBuilder = sp.GetRequiredService<IExtendDbContextOptionsBuilder>();
+                            var connStringFactory = sp.GetRequiredService<IDatabaseConnectionStringFactory>();
+                            extendOptionsBuilder.Extend(o, connStringFactory,
+                                config.LoadApplicationAssemblies().FirstOrDefault()?.GetName().Name);
+                        });
 
-    public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-      WebHost.CreateDefaultBuilder(args)
-        .UseStartup<Startup>()
-        .UseDefaultServiceProvider(o => o.ValidateScopes = false);
-  }
+                        services.AddScoped<DbContext>(resolver => resolver.GetService<InventoryDbContext>());
+                        services.AddGenericRepository();
+                        services.AddEfCoreMySqlDb();
+                    },
+                    svc => {
+                        IdentityModelEventSource.ShowPII = true;
+                        svc.AddHostedService<HostedService>();
+                    });
+
+            await host.RunAsync();
+        }
+    }
 }

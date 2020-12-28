@@ -1,18 +1,22 @@
 FROM node:alpine
 
+RUN apk update && apk add libc6-compat
+RUN GRPC_HEALTH_PROBE_VERSION=v0.2.0 && \
+  wget -qO/bin/grpc_health_probe https://github.com/grpc-ecosystem/grpc-health-probe/releases/download/${GRPC_HEALTH_PROBE_VERSION}/grpc_health_probe-linux-amd64 && \
+  chmod +x /bin/grpc_health_probe
+
+RUN npm install -g typescript
+
 ARG service_version
 ENV SERVICE_VERSION ${service_version:-v1}
-EXPOSE 5002
+
+WORKDIR /app
+COPY ./src/grpc/v1/catalog.proto ./proto/
+COPY ./src/grpc/health/v1/health.proto ./proto/
+COPY ./src/services/rating .
+RUN yarn install
+
+EXPOSE 5007
 ENV NODE_ENV production
 
-RUN mkdir -p /app/dist
-WORKDIR /app
-
-COPY ./src/services/rating/src src
-COPY ./src/services/rating/package.json package.json
-COPY ./src/services/rating/tsconfig.json tsconfig.json
-COPY ./src/services/rating/tsoa.json tsoa.json
-COPY ./src/services/rating/webpack.config.js webpack.config.js
-RUN yarn install && yarn add rimraf cross-env npm-run-all webpack ts-node typescript webpack-cli webpack-shell-plugin ts-loader
-
-ENTRYPOINT ["yarn", "start"]
+CMD ["yarn", "start"]

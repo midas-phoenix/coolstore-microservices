@@ -1,10 +1,17 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: idp-v1
   namespace: {{ .Release.Namespace }}
+  labels:
+    app: idp
+    version: v1
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: idp
+      version: v1
   template:
     metadata:
       labels:
@@ -19,7 +26,7 @@ spec:
         - name: HostSettings__BasePath
           value: {{ .Values.idpSettings.BasePath }}
         - name: Hosts__Externals__CurrentUri
-          value: {{ .Values.idpSettings.Hosts__Externals__CurrentUri }}
+          value: {{ .Values.idpSettings.ExternalCurrentUri }}
         - name: HostSettings__SwaggerRedirectUri
           value: {{ .Values.idpSettings.SwaggerRedirectUri }}
         - name: HostSettings__SwaggerPostLogoutRedirectUri
@@ -28,7 +35,16 @@ spec:
           value: {{ .Values.idpSettings.SwaggerAllowedCorsOrigin }}
         - name: HostSettings__SpaAllowedCorsOrigin
           value: {{ .Values.idpSettings.SpaAllowedCorsOrigin }}
+        - name: HostSettings__BackOfficeAllowedCorsOrigin
+          value: {{ .Values.idpSettings.BackOfficeAllowedCorsOrigin }}
         ports:
         - name: http
-          containerPort: 5001
+          containerPort: 80
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+          limits:
+            cpu: 200m
+            memory: 64Mi
 ---

@@ -7,10 +7,10 @@ metadata:
     app: cart
 spec:
   ports:
-  - port: 80
-    targetPort: 5003
+  - name: grpc
+    port: {{ .Values.cartSettings.Port }}
+    targetPort: {{ .Values.cartSettings.Port }}
     protocol: TCP
-    name: http
   selector:
     app: cart
 ---

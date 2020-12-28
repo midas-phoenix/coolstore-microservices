@@ -1,13 +1,21 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: inventory-v1
   namespace: {{ .Release.Namespace }}
+  labels:
+    app: inventory
+    version: v1
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: inventory
+      version: v1
   template:
     metadata:
       labels:
+        transcode: http
         app: inventory
         version: v1
     spec:
@@ -16,18 +24,33 @@ spec:
         image: {{.Values.image.imageRegistry}}/cs-inventory-service:{{.Values.image.dockerTag}}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         env:
-        - name: Hosts__BasePath
-          value: /inventory/
-        - name: Hosts__Externals__CurrentUri
-          value: {{ .Values.inventorySettings.Hosts__Externals__CurrentUri }}
-        - name: Hosts__Externals__Auth__Uri
-          value: {{ .Values.inventorySettings.Hosts__Externals__Auth__Uri }}
+        - name: Hosts__Local__Host
+          value: {{ .Values.inventorySettings.Host }}
+        - name: Hosts__Local__Port
+          value: {{ .Values.inventorySettings.Port | quote }}
+        - name: Features__EfCore__MySqlDb__FQDN
+          value: {{ .Values.inventorySettings.MySqlDbFQDN }}
+        - name: Features__EfCore__MySqlDb__Password
+          valueFrom:
+            secretKeyRef:
+              name: inventory-secrets
+              key: MySqlDbPassword
         ports:
-        - containerPort: 5004
+        - containerPort: {{ .Values.inventorySettings.Port }}
+        readinessProbe:
+          initialDelaySeconds: 15
+          exec:
+            command: ["/bin/grpc_health_probe", "-addr=:{{ .Values.inventorySettings.Port }}"]
         livenessProbe:
-          httpGet:
-            path: /healthz
-            port: 5004
-          initialDelaySeconds: 10
-          periodSeconds: 5
+          initialDelaySeconds: 15
+          periodSeconds: 10
+          exec:
+            command: ["/bin/grpc_health_probe", "-addr=:{{ .Values.inventorySettings.Port }}"]
+        # resources:
+        #   requests:
+        #     cpu: 70m
+        #     memory: 128Mi
+        #   limits:
+        #     cpu: 250m
+        #     memory: 256Mi
 ---

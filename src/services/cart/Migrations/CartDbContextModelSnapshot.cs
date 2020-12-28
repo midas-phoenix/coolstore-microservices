@@ -3,7 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using VND.CoolStore.Services.Cart.Infrastructure.Db;
+using VND.CoolStore.Services.Cart.v1.Db;
 
 namespace VND.CoolStore.Services.Cart.Migrations
 {
@@ -14,7 +14,7 @@ namespace VND.CoolStore.Services.Cart.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.1-rtm-30846")
+                .HasAnnotation("ProductVersion", "2.2.3-servicing-35854")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("VND.CoolStore.Services.Cart.Domain.Cart", b =>
@@ -37,6 +37,8 @@ namespace VND.CoolStore.Services.Cart.Migrations
                     b.Property<double>("ShippingTotal");
 
                     b.Property<DateTime>("Updated");
+
+                    b.Property<int>("Version");
 
                     b.HasKey("Id");
 
@@ -70,8 +72,6 @@ namespace VND.CoolStore.Services.Cart.Migrations
             modelBuilder.Entity("VND.CoolStore.Services.Cart.Domain.Product", b =>
                 {
                     b.Property<Guid>("Id");
-
-                    b.Property<Guid>("ProductId");
 
                     b.HasKey("Id");
 
